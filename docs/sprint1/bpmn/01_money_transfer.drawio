@@ -1,0 +1,160 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Страница-1" id="bhgtiScspG3DiCOzi7hO">
+    <mxGraphModel dx="1717" dy="878" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="pool_client" parent="1" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#f8f9fa;strokeColor=#495057;fontStyle=1;" value="Клієнт" vertex="1">
+          <mxGeometry height="150" width="1440" x="40" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="pool_bank" parent="1" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#f8f9fa;strokeColor=#495057;fontStyle=1;" value="Банк" vertex="1">
+          <mxGeometry height="340" width="1440" x="40" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="lane_system" parent="1" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#ced4da;" value="Система" vertex="1">
+          <mxGeometry height="190" width="1410" x="70" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="lane_operator" parent="1" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#ced4da;" value="Операціоніст" vertex="1">
+          <mxGeometry height="150" width="1410" x="70" y="420" as="geometry" />
+        </mxCell>
+        <mxCell id="pool_proc" collapsed="1" parent="1" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#e9ecef;strokeColor=#6c757d;fontStyle=1;" value="Процесинговий центр" vertex="1">
+          <mxGeometry height="150" width="40" x="975" y="630" as="geometry">
+            <mxRectangle height="70" width="1440" x="40" y="610" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="c_start" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeWidth=1;fillColor=#d4edda;strokeColor=#28a745;fontSize=10;" value="Надіслано форму переказу" vertex="1">
+          <mxGeometry height="50" width="50" x="110" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="c_task1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;fillColor=#ffffff;strokeColor=#343a40;" value="Ввести суму і рахунки" vertex="1">
+          <mxGeometry height="60" width="120" x="200" y="85" as="geometry" />
+        </mxCell>
+        <mxCell id="c_data" parent="1" style="shape=note;whiteSpace=wrap;html=1;size=14;verticalImagePosition=top;mrk=0;fillColor=#fff3cd;strokeColor=#ffeba7;fontSize=10;" value="Заявка на переказ" vertex="1">
+          <mxGeometry height="50" width="60" x="230" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="c_end" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeWidth=3;fillColor=#d4edda;strokeColor=#28a745;fontSize=10;" value="Виконано" vertex="1">
+          <mxGeometry height="50" width="50" x="1400" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="s_gw1" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe8cc;strokeColor=#d9480f;fontSize=9;" value="Реквізити вірні та баланс достатній?" vertex="1">
+          <mxGeometry height="70" width="70" x="225" y="275" as="geometry" />
+        </mxCell>
+        <mxCell id="s_end_rej1" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeWidth=3;fillColor=#f8d7da;strokeColor=#dc3545;fontSize=9;" value="Відхилено системою" vertex="1">
+          <mxGeometry height="50" width="50" x="235" y="365" as="geometry" />
+        </mxCell>
+        <mxCell id="s_gw2" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe8cc;strokeColor=#d9480f;fontSize=9;" value="Сума перевищує денний ліміт?" vertex="1">
+          <mxGeometry height="70" width="70" x="340" y="275" as="geometry" />
+        </mxCell>
+        <mxCell id="s_and_fork" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#e7f5ff;strokeColor=#1971c2;fontStyle=1;fontSize=18;" value="+" vertex="1">
+          <mxGeometry height="50" width="50" x="580" y="285" as="geometry" />
+        </mxCell>
+        <mxCell id="s_task_debit" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;fillColor=#ffffff;strokeColor=#343a40;fontSize=10;" value="Списати кошти з рахунку відправника" vertex="1">
+          <mxGeometry height="50" width="130" x="670" y="245" as="geometry" />
+        </mxCell>
+        <mxCell id="s_task_proc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;fillColor=#ffffff;strokeColor=#343a40;fontSize=10;" value="Взаємодія з процесинговим центром" vertex="1">
+          <mxGeometry height="50" width="130" x="670" y="335" as="geometry" />
+        </mxCell>
+        <mxCell id="s_and_join" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#e7f5ff;strokeColor=#1971c2;fontStyle=1;fontSize=18;" value="+" vertex="1">
+          <mxGeometry height="50" width="50" x="840" y="285" as="geometry" />
+        </mxCell>
+        <mxCell id="s_task_finalize" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;fillColor=#ffffff;strokeColor=#343a40;fontSize=10;" value="Відправити запит до процесингу на фіналізацію" vertex="1">
+          <mxGeometry height="60" width="130" x="930" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="s_gw_event" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff3bf;strokeColor=#f08c00;" value="" vertex="1">
+          <mxGeometry height="50" width="50" x="1090" y="285" as="geometry" />
+        </mxCell>
+        <mxCell id="s_gw_event_icon" parent="1" style="ellipse;shape=doubleEllipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=none;strokeColor=#f08c00;" value="" vertex="1">
+          <mxGeometry height="24" width="24" x="1103" y="298" as="geometry" />
+        </mxCell>
+        <mxCell id="s_ev_msg" parent="1" style="ellipse;shape=doubleEllipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffffff;strokeColor=#1971c2;fontSize=9;" value="Отримано підтвердження" vertex="1">
+          <mxGeometry height="45" width="45" x="1170" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="s_ev_tmr" parent="1" style="ellipse;shape=doubleEllipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#ffffff;strokeColor=#d9480f;fontSize=9;" value="Минуло 24 години" vertex="1">
+          <mxGeometry height="45" width="45" x="1170" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="s_end_timeout" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeWidth=3;fillColor=#f8d7da;strokeColor=#dc3545;fontSize=10;" value="Таймаут" vertex="1">
+          <mxGeometry height="40" width="40" x="1250" y="342" as="geometry" />
+        </mxCell>
+        <mxCell id="s_task_history" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;fillColor=#ffffff;strokeColor=#343a40;fontSize=10;" value="Записати операцію в історію та вивести результат" vertex="1">
+          <mxGeometry height="60" width="130" x="1250" y="242" as="geometry" />
+        </mxCell>
+        <mxCell id="op_task" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;fillColor=#ffffff;strokeColor=#343a40;fontSize=10;" value="Підтвердити операцію вручну" vertex="1">
+          <mxGeometry height="60" width="120" x="315" y="465" as="geometry" />
+        </mxCell>
+        <mxCell id="op_gw" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe8cc;strokeColor=#d9480f;fontSize=9;" value="Операція підтверджена?" vertex="1">
+          <mxGeometry height="70" width="70" x="470" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="op_end_rej" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeWidth=3;fillColor=#f8d7da;strokeColor=#dc3545;fontSize=9;" value="Відхилено операціоністом" vertex="1">
+          <mxGeometry height="50" width="50" x="480" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="f1" edge="1" parent="1" source="c_start" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="c_task1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f_data" edge="1" parent="1" source="c_task1" style="edgeStyle=none;dashed=1;html=1;endArrow=none;" target="c_data">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f_cross_error" edge="1" parent="1" source="c_task1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=1;strokeColor=#000000;" target="s_gw1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f_s1_no" edge="1" parent="1" source="s_gw1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;" target="s_end_rej1" value="ні">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f_s1_yes" edge="1" parent="1" source="s_gw1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;" target="s_gw2" value="так">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f_s2_yes" edge="1" parent="1" source="s_gw2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;" target="op_task" value="так">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f_s2_no" edge="1" parent="1" source="s_gw2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;" target="s_and_fork" value="ні">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f_op1" edge="1" parent="1" source="op_task" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="op_gw">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f_op_no" edge="1" parent="1" source="op_gw" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;" target="op_end_rej" value="ні">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f_op_yes" edge="1" parent="1" source="op_gw" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;" target="s_and_fork" value="так">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="580" y="495" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="f_and1" edge="1" parent="1" source="s_and_fork" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="s_task_debit">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f_and2" edge="1" parent="1" source="s_and_fork" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="s_task_proc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f_join1" edge="1" parent="1" source="s_task_debit" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="s_and_join">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f_join2" edge="1" parent="1" source="s_task_proc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="s_and_join">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f_fin" edge="1" parent="1" source="s_and_join" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="s_task_finalize">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f_msg_out" edge="1" parent="1" source="s_task_finalize" style="edgeStyle=orthogonalEdgeStyle;dashed=1;html=1;strokeColor=#1971c2;" target="pool_proc">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f_to_ev_gw" edge="1" parent="1" source="s_task_finalize" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="s_gw_event">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f_ev1" edge="1" parent="1" source="s_gw_event" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="s_ev_msg">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f_ev2" edge="1" parent="1" source="s_gw_event" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="s_ev_tmr">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f_tmr_end" edge="1" parent="1" source="s_ev_tmr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="s_end_timeout">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f_msg_ok" edge="1" parent="1" source="s_ev_msg" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="s_task_history">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f_done_out" edge="1" parent="1" source="s_task_history" style="edgeStyle=orthogonalEdgeStyle;dashed=1;html=1;strokeColor=#28a745;" target="c_end">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
