@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net">
   <diagram name="Страница-1" id="IPLRk-LNOKiuf4d4R4Fj">
-    <mxGraphModel dx="1585" dy="811" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1471" dy="753" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -8,19 +8,19 @@
           <mxGeometry height="150" width="1240" x="40" y="40" as="geometry" />
         </mxCell>
         <mxCell id="p2_bank" parent="1" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#f8f9fa;strokeColor=#495057;fontStyle=1;" value="Банк" vertex="1">
-          <mxGeometry height="340" width="1240" x="40" y="230" as="geometry" />
+          <mxGeometry height="375" width="1240" x="40" y="235" as="geometry" />
         </mxCell>
-        <mxCell id="l2_system" parent="1" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#ced4da;" value="Система" vertex="1">
-          <mxGeometry height="180" width="1210" x="70" y="230" as="geometry" />
+        <mxCell id="l2_operator" parent="p2_bank" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#ced4da;" value="Операціоніст" vertex="1">
+          <mxGeometry height="190" width="1210" x="20" y="185" as="geometry" />
+        </mxCell>
+        <mxCell id="op2_end_rej" parent="l2_operator" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeWidth=3;fillColor=#f8d7da;strokeColor=#dc3545;fontSize=9;" value="Відмовлено (документи)" vertex="1">
+          <mxGeometry height="50" width="50" x="470" y="155" as="geometry" />
+        </mxCell>
+        <mxCell id="l2_system" parent="p2_bank" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#ced4da;" value="Система" vertex="1">
+          <mxGeometry height="180" width="1210" x="20" as="geometry" />
         </mxCell>
         <mxCell id="s2_annot" parent="l2_system" style="shape=note;whiteSpace=wrap;html=1;size=14;fillColor=#fff3cd;strokeColor=#ffeba7;fontSize=9;" value="[ Реквізити нового рахунку генеруються автоматично" vertex="1">
-          <mxGeometry height="35" width="160" x="725" as="geometry" />
-        </mxCell>
-        <mxCell id="l2_operator" parent="1" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#ced4da;" value="Операціоніст" vertex="1">
-          <mxGeometry height="160" width="1210" x="70" y="410" as="geometry" />
-        </mxCell>
-        <mxCell id="s2_end_nofunds" parent="l2_operator" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeWidth=3;fillColor=#f8d7da;strokeColor=#dc3545;fontSize=9;" value="Недостатньо коштів" vertex="1">
-          <mxGeometry height="50" width="50" x="605" y="-20" as="geometry" />
+          <mxGeometry height="35" width="160" x="740" y="10" as="geometry" />
         </mxCell>
         <mxCell id="c2_start" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeWidth=1;fillColor=#d4edda;strokeColor=#28a745;fontSize=10;" value="Клієнт обрав відкрити рахунок" vertex="1">
           <mxGeometry height="50" width="50" x="110" y="90" as="geometry" />
@@ -37,6 +37,9 @@
         <mxCell id="s2_gw_funds" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe8cc;strokeColor=#d9480f;fontSize=9;" value="Чи достатньо коштів для початкового внеску?" vertex="1">
           <mxGeometry height="80" width="80" x="660" y="275" as="geometry" />
         </mxCell>
+        <mxCell id="s2_end_nofunds" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeWidth=3;fillColor=#f8d7da;strokeColor=#dc3545;fontSize=9;" value="Недостатньо коштів" vertex="1">
+          <mxGeometry height="50" width="50" x="675" y="365" as="geometry" />
+        </mxCell>
         <mxCell id="s2_task_create" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=15;fillColor=#ffffff;strokeColor=#343a40;fontSize=10;" value="Створити рахунок і перенести внесок" vertex="1">
           <mxGeometry height="60" width="130" x="810" y="285" as="geometry" />
         </mxCell>
@@ -52,19 +55,16 @@
         <mxCell id="op2_gw_doc" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe8cc;strokeColor=#d9480f;fontSize=9;" value="Документи в порядку?" vertex="1">
           <mxGeometry height="70" width="70" x="520" y="455" as="geometry" />
         </mxCell>
-        <mxCell id="op2_end_rej" parent="1" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeWidth=3;fillColor=#f8d7da;strokeColor=#dc3545;fontSize=9;" value="Відмовлено (документи)" vertex="1">
-          <mxGeometry height="50" width="50" x="530" y="535" as="geometry" />
-        </mxCell>
         <mxCell id="f2_1" edge="1" parent="1" source="c2_start" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="c2_task">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="f2_msg_in" edge="1" parent="1" source="c2_task" style="edgeStyle=orthogonalEdgeStyle;dashed=1;html=1;" target="s2_gw_ident">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="f2_defect_no_label1" edge="1" parent="1" source="s2_gw_ident" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="s2_gw_funds" value="">
+        <mxCell id="f2_gw_ident_yes" edge="1" parent="1" source="s2_gw_ident" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;" target="s2_gw_funds" value="так">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="f2_defect_no_label2" edge="1" parent="1" source="s2_gw_ident" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;" target="op2_task_doc" value="">
+        <mxCell id="f2_gw_ident_no" edge="1" parent="1" source="s2_gw_ident" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;fontSize=10;" target="op2_task_doc" value="ні">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="f2_db" edge="1" parent="1" source="op2_task_doc" style="edgeStyle=none;dashed=1;html=1;endArrow=none;" target="op2_db">
