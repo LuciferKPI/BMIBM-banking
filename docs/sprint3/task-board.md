@@ -37,8 +37,10 @@
 *   **Скріншоти:** `BUG-001-1.png`, `BUG-001-2.png`... (зберігаються у папці `attachments/`).
 
 **Правила найменування комітів:**
-Коміти мають бути зрозумілими та відображати суть змін. Рекомендований формат: `[Тип] Опис`.
-*   `[Docs] Додано task-board.md та розподілено задачі`
-*   `[Test] Додано 20 чернеток тест-кейсів від ТА`
-*   `[Test] Рецензування тест-кейсів завершено, статус reviewed`
-*   `[Bug] Оформлено звіти BUG-001 - BUG-005`
+Коміти мають бути зрозумілими та відображати суть змін. Рекомендований формат: `[Type] Description`.
+Приклади:
+*   `[Docs] Add task-board.md and distribute sprint tasks`
+*   `[Test] Add 20 draft test cases for functional and GUI requirements`
+*   `[Test] Complete test cases review, update status to reviewed`
+*   `[Bug] Add bug reports BUG-001 to BUG-005`
+*   `[Docs] Update execution log and add final sprint statistics`
