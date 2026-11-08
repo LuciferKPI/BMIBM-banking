@@ -1,166 +1,185 @@
-# Стартовий проєкт автотестів ТЗЯПЗ (JUnit 5 + Selenium WebDriver 4)
+# BMIBM-banking — автотести продукту «ФінКит»
 
-Мінімальний Maven-проєкт для спринта 4 «Автоматизація» і спринта 5 «Регресія». Містить робочий
-`pom.xml`, клас-зразок `Calculator` з юніт-тестами JUnit 5 та один UI-тест Selenium WebDriver
-(smoke-перевірка головної сторінки demo-застосунку). Команда клонує його, додає модуль бізнес-логіки
-свого продукту й пише власні тести.
+Репозиторій командної роботи студентів групи **ФБ-44** з дисципліни  
+«Технології забезпечення якості програмних засобів» (КПІ ім. Ігоря Сікорського).
 
-## 1. Вимоги до робочого місця
+**Продукт:** «ФінКит» — онлайн-банкінг для фізичних осіб (slug: `finkit`).  
+**Demo-система:** [ParaBank](https://parabank.parasoft.com/parabank/index.htm).  
+**Резервна система:** GlobalSQA Banking Project.  
+**Досьє якості (папка команди):** https://drive.google.com/drive/folders/1jbAbiFvRA4iXGWSZh-gUgtGHIafCVJ6X?usp=sharing
 
-| Що | Версія | Як перевірити |
-|---|---|---|
-| JDK (Temurin) | 17 | `java -version` → `openjdk version "17.…"` |
-| Apache Maven | 3.9 (працює і 3.8) | `mvn -v` → рядок `Java version: 17.…` |
-| IntelliJ IDEA Community Edition | актуальна | меню Help → About |
-| Google Chrome (або Firefox) | актуальна | драйвер браузера встановлювати НЕ потрібно — його завантажує Selenium Manager |
-| Git | будь-яка | `git --version` |
+---
 
-Інтернет потрібен для першого збирання (Maven завантажує залежності у `~/.m2`) і для UI-тестів
-(вони відкривають публічний demo-застосунок).
+## 1. Склад команди та ролі у спринті 4
 
-## 2. Імпорт у IntelliJ IDEA
+| ПІБ | GitHub | Роль у C4 | Роль у C5 |
+|---|---|---|---|
+| Пономаренко Роман В. | @meowchenikot | Керівник тестування + Скрам-майстер (КТ/СМ) | 
+| Городиська Анна А. | @mellmii| Тест-аналітик (ТА) |
+| Мажуга Ілля К. | @LuciferKPI | Інженер з тестування (ІТ / SDET) | 
 
-1. `File → Open…` → виберіть папку з `pom.xml` (саме папку, не файл) → `Open as Project`.
-2. Дочекайтеся, поки IDEA проіндексує проєкт і завантажить залежності (індикатор унизу праворуч).
-3. `File → Project Structure → Project → SDK` має бути **17**. Якщо у списку немає JDK 17 —
-   `Add SDK → Download JDK… → Eclipse Temurin 17`.
-4. Відкрийте `src/test/java/ua/kpi/tzyapz/starter/CalculatorTest.java`, натисніть зелену стрілку
-   біля назви класу → тести мають пройти (7 зелених).
+> **Примітка.** Графік ротації ролей на спринти 1–5 зафіксовано в [`docs/team/charter.md`](https://github.com/LuciferKPI/BMIBM-banking/blob/main/docs/team/charter.md). Для спринта 5 роль кожного члена команди визначається згідно з цим графіком (у команді з 3 осіб КТ/СМ поєднується).
 
-## 3. Запуск тестів
+---
+
+## 2. Вимоги до середовища
+
+- **JDK:** 17 (Temurin).
+- **Maven:** 3.9.
+- **Браузер:** Chrome або Firefox (драйвер автоматично завантажується Selenium Manager).
+- **Залежності (з `pom.xml`):**
+  - JUnit 5 (Jupiter 5.10.2) — `junit-jupiter`.
+  - Selenium 4 (selenium-java 4.21.0).
+- **IDE (рекомендовано):** IntelliJ IDEA Community.
+
+> Selenium Manager (вбудований у Selenium 4.6+) сам визначає версію браузера й завантажує сумісний драйвер у `~/.cache/selenium`. Для першого запуску UI-тестів потрібен доступ до Інтернету.
+
+---
+
+## 3. Як зібрати та запустити тести
 
 ```bash
-# юніт-тести (UI-тести з тегом "ui" за замовчуванням виключені)
+# Клонувати репозиторій
+git clone https://github.com/LuciferKPI/BMIBM-banking.git
+cd BMIBM-banking
+
+# Запустити всі юніт-тести (UI-тести з тегом ui вимкнені за замовчуванням)
 mvn test
 
-# юніт- + UI-тести (потрібен встановлений Chrome; браузер запускається у headless-режимі)
+# Запустити лише конкретний юніт-тест-клас
+mvn test -Dtest=LoanCalculatorTest
+
+# Запустити всі тести, включно з UI-сценаріями
 mvn test -DexcludedGroups=none
 
-# лише один клас або один метод
-mvn test -Dtest=CalculatorTest
-mvn test -Dtest=CalculatorTest#divideByZeroThrows
-mvn test -DexcludedGroups=none -Dtest=SmokeUiTest
-
-# чисте збирання «з нуля» (так робить рецензент і аудитор)
-mvn clean test
+# Запустити лише UI-тести
+mvn test -DexcludedGroups=none -Dtest=*UiTest
 ```
 
-Очікуваний результат для стартового проєкту:
+**Звіти Surefire:** `target/surefire-reports/` (файли `*.txt` та `TEST-*.xml`).  
+Протокол запуску (підсумок `Tests run: …`) зберігається в _[`docs/sprint4/surefire-summary.md`]_ — _[посилання буде додано після першого повного прогону]_.
+
+---
+
+## 4. Структура репозиторію (спринт 4)
 
 ```
-[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0
-[INFO] BUILD SUCCESS
-```
-
-Звіти Surefire лежать у `target/surefire-reports/`: `*.txt` — короткий підсумок по класу,
-`TEST-*.xml` — повний перелік тестів із часом і текстом помилок. Саме ці файли (або їхній
-знімок у README/протоколі) є «протоколом запуску» інкременту спринта 4.
-
-## 4. Структура папок
-
-```
-starter/
-├── pom.xml                              # залежності: junit-jupiter 5.10, selenium-java 4.21; Surefire
-├── README.md
+.
 ├── .gitignore
+├── README.md
+├── pom.xml
+├── .github/
+│   └── ISSUE_TEMPLATE/bug_report.md        # шаблон звіту про дефект
+├── docs/
+│   ├── team/charter.md
+│   ├── sprint1/ …                          # матеріали спринта 1
+│   ├── sprint3/ …                          # тест-кейси та журнал (спринт 3)
+│   └── sprint4/                            # артефакти спринта 4
+│       ├── coverage-matrix.md              # BL-вимога → тест → рецензент
+│       ├── surefire-summary.md             # протокол запуску
+│       └── ui-scenarios.md                 # TC → кроки, локатори, тест-метод
+├── selenium-ide/
+│   ├── finkit.side                         # проєкт Selenium IDE (1–2 сценарії)
+│   └── export/                             # експортовані Java-чернетки
 └── src/
-    ├── main/java/ua/kpi/tzyapz/starter/
-    │   └── Calculator.java              # клас-зразок (сюди ж або поруч кладуть модуль продукту)
-    └── test/java/ua/kpi/tzyapz/starter/
-        ├── CalculatorTest.java          # зразок юніт-тестів: @Test, @BeforeEach, @ParameterizedTest, assertAll
+    ├── main/java/ua/kpi/tzyapz/finkit/     # модуль бізнес-логіки v1
+    │   ├── LoanCalculator.java
+    │   ├── TransferValidator.java
+    │   └── AccountLedger.java
+    └── test/java/ua/kpi/tzyapz/finkit/
+        ├── LoanCalculatorTest.java
+        ├── TransferValidatorTest.java
+        ├── AccountLedgerTest.java
         └── ui/
-            └── SmokeUiTest.java         # зразок UI-тесту: ChromeOptions headless, WebDriverWait, @Tag("ui")
+            ├── ParaBankLoginUiTest.java
+            ├── ParaBankTransferUiTest.java
+            ├── ParaBankLoanUiTest.java
+            └── ParaBankBillPayUiTest.java
 ```
 
-Правило: тести лежать у `src/test/java` у **тому самому пакеті**, що й клас, який вони перевіряють;
-UI-тести — у підпакеті `ui`. Ім'я тест-класу = ім'я класу + `Test`.
+> **Примітка.** Назви UI-тест-класів наведено орієнтовно; вони мають відповідати фактичній реалізації. Перелік обраних UI-сценаріїв та відповідних тест-кейсів — у `docs/sprint4/ui-scenarios.md`.
 
-## 5. Як підключити модуль свого продукту
+---
 
-Модуль бізнес-логіки продукту лежить у пакеті `code/modules/<slug>/v1/` (наприклад
-`code/modules/shopline/v1/`) і є самостійним Maven-проєктом з таким самим `pom.xml`
-(`artifactId` = `<slug>-module`). Два рівноцінні варіанти:
+## 5. Що покрито тестами (станом на спринт 4)
 
-**Варіант А (рекомендований): модуль стає робочим проєктом команди.**
-1. Скопіюйте папку `code/modules/<slug>/v1/` у репозиторій команди (наприклад як `qa-<slug>/`).
-2. Створіть у ній `src/test/java/ua/kpi/tzyapz/<slug>/` для юніт-тестів
-   і `src/test/java/ua/kpi/tzyapz/<slug>/ui/` для WebDriver-тестів.
-3. Скопіюйте туди `SmokeUiTest.java` як заготовку UI-тесту (змініть пакет) та цей `README.md`
-   і `.gitignore`. У спринті 5 ви замініте `src/main/java` на версію v2 — тести лишаться на місці.
+### 5.1. Юніт-тести (JUnit 5)
 
-**Варіант Б: класи модуля додаються у стартовий проєкт.**
-1. Скопіюйте `code/modules/<slug>/v1/src/main/java/ua/kpi/tzyapz/<slug>/` у
-   `starter/src/main/java/ua/kpi/tzyapz/<slug>/`.
-2. Тести пишіть у `starter/src/test/java/ua/kpi/tzyapz/<slug>/`.
-3. За бажанням змініть `artifactId` і `name` у `pom.xml` на назву команди.
+| Тест-клас / метод | Вимога SRS | Тест-кейс (за потреби) | Автор |
+|---|---|---|---|
+| `LoanCalculatorTest` (параметризовані + граничні) | BL-10, BL-20, BL-30 | — | _[заповнити]_ |
+| `TransferValidatorTest` (межі, коди помилок) | BL-40, BL-50 | — | _[заповнити]_ |
+| `AccountLedgerTest` (deposit / withdraw, винятки) | BL-70, BL-80 | — | _[заповнити]_ |
 
-В обох варіантах збірка перевіряється командою `mvn clean test` з кореня проєкту.
+> **Джерело очікуваних значень:** розділ 5 «Вимоги до бізнес-логіки» у виправленій SRS v1.1. Очікувані значення обчислено вручну за формулами BL-10, BL-20, BL-30, BL-40, BL-50, BL-70, BL-80, а не взяті з поведінки коду.
 
-## 6. Як вставити тест, експортований із Selenium IDE
+### 5.2. UI-тести (Selenium WebDriver 4)
 
-Selenium IDE (`Export → Java JUnit`) генерує клас у стилі JUnit 4, а у проєкті підключено JUnit 5.
-Після вставки файлу у `src/test/java/ua/kpi/tzyapz/<slug>/ui/` зробіть такі заміни:
+| Тест-клас / метод | Тест-кейс (спринт 3) | Вимога SRS | Автор |
+|---|---|---|---|
+| `ParaBankLoginUiTest` (успішний / неуспішний вхід) | TC-004, TC-005 | F-20, GUI-10 | _[заповнити]_ |
+| `ParaBankTransferUiTest` (переказ, ліміти, помилки) | TC-010, TC-011, TC-012, TC-013 | F-70, BL-40 | _[заповнити]_ |
+| `ParaBankLoanUiTest` (межі кредиту) | TC-019, TC-020, TC-025…TC-027 | F-110, BL-30 | _[заповнити]_ |
+| `ParaBankBillPayUiTest` (оплата рахунку) | TC-014, TC-015 | F-80, GUI-60 | _[заповнити]_ |
 
-| Було (експорт IDE, JUnit 4) | Стало (JUnit 5) |
-|---|---|
-| `package com.example;` | `package ua.kpi.tzyapz.<slug>.ui;` |
-| `import org.junit.Test;` | `import org.junit.jupiter.api.Test;` |
-| `import org.junit.Before;` / `@Before` | `import org.junit.jupiter.api.BeforeEach;` / `@BeforeEach` |
-| `import org.junit.After;` / `@After` | `import org.junit.jupiter.api.AfterEach;` / `@AfterEach` |
-| `import static org.junit.Assert.*;` | `import static org.junit.jupiter.api.Assertions.*;` |
-| `assertThat(x, is("текст"))` (Hamcrest) | `assertEquals("текст", x)` |
-| `driver = new ChromeDriver();` | `driver = new ChromeDriver(options);` з `--headless=new` (див. `SmokeUiTest`) |
-| невикористані імпорти (`FirefoxDriver`, `RemoteWebDriver`, `Actions`, `Alert`, `Keys`…) | видалити |
-| — | додати `@Tag("ui")` над класом |
+> **Примітка.** Усі UI-тести позначені `@Tag("ui")` і за замовчуванням виключені з `mvn test`. Для запуску використовуйте `mvn test -DexcludedGroups=none`. Кожен тест відкриває власний браузер у `@BeforeEach` і закриває його в `@AfterEach` (`driver.quit()`).
 
-Далі замініть «сліпі» `Thread.sleep` і команди `wait for …` на `WebDriverWait` +
-`ExpectedConditions`, а очікуваний результат — на явні `assert…`. Перевірте: `mvn test -DexcludedGroups=none -Dtest=<Клас>`.
+### 5.3. Selenium IDE
 
-## 7. Типові помилки
+- Проєкт: `selenium-ide/finkit.side`.
+- Сценарії: _[вказати назви, наприклад «Вхід клієнта», «Переказ коштів»]_.
+- Експорт у Java: `selenium-ide/export/` (чернетки, не входять до збірки).
 
-**`mvn` збирає старим JDK (помилки на кшталт `invalid target release: 17`, `release version 17 not supported`).**
-Перевірте, який JDK бачить Maven:
+---
 
-```bash
-mvn -v
-# Java version: 1.8.0_… або 11.… → JAVA_HOME вказує не на 17
-```
+## 6. Дефекти модуля (v1)
 
-macOS / Linux:
-```bash
-export JAVA_HOME=$(/usr/libexec/java_home -v 17)      # macOS
-export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64     # Linux (шлях може відрізнятися)
-mvn -v
-```
-Windows (PowerShell, поточне вікно):
-```powershell
-$env:JAVA_HOME = "C:\Program Files\Eclipse Adoptium\jdk-17.0.11.9-hotspot"
-mvn -v
-```
-Щоб зміна була постійною, задайте змінну середовища `JAVA_HOME` у налаштуваннях системи
-(Windows) або у `~/.zshrc` / `~/.bashrc`.
+Знайдені під час юніт-тестування дефекти модуля оформлено за шаблоном спринта 3 у **GitHub Issues** з мітками `module`, `severity:*`, `priority:*`, `status:*`.
 
-**`No tests were executed` або `Tests run: 0`.** Клас тесту не в `src/test/java`, метод не
-позначений `@Test`, або ім'я класу не закінчується на `Test`/`Tests` (Surefire включає лише
-`*Test`, `Test*`, `*Tests`, `*TestCase`).
+- **Шаблон звіту:** [`.github/ISSUE_TEMPLATE/bug_report.md`](https://github.com/LuciferKPI/BMIBM-banking/blob/main/.github/ISSUE_TEMPLATE/bug_report.md).
+- **Поточний перелік:** _[посилання на фільтр Issues, наприклад `is:issue label:module`]_.
+- **Мінімальна кількість для команди з 3 осіб:** ≥ 3 дефекти (з 6 закладених у модулі v1).
 
-**UI-тест не запускається (`Skipped` або взагалі не в списку).** Тег `ui` виключено за
-замовчуванням — запускайте `mvn test -DexcludedGroups=none`.
+> **Примітка.** Кожен «червоний» юніт-тест, що фіксує дефект, залишається в наборі до спринта 5, де перевіряється на версії v2 (closed / reopened). У коментарі до тесту вказується ID звіту про дефект.
 
-**`SessionNotCreatedException` / `Unable to obtain driver`.** Selenium Manager не зміг
-завантажити драйвер: перевірте інтернет і чи встановлений Chrome; у корпоративній мережі із
-проксі — задайте `HTTPS_PROXY`. Кеш драйверів — `~/.cache/selenium`.
+---
 
-**`NoSuchElementException` / `TimeoutException`.** Елемент ще не з'явився або локатор
-неправильний: перевірте локатор у DevTools (`Ctrl+F` у вкладці Elements приймає CSS та XPath)
-і додайте `WebDriverWait` перед пошуком.
+## 7. Версії модуля бізнес-логіки
 
-**Тест «іноді падає».** Сторінка перемальовується після дії (SPA): чекайте на стан, який справді
-перевіряєте (текст, кількість елементів, URL), а не на «щось з'явилося».
+- **v1 (спринт 4):** `src/main/java/ua/kpi/tzyapz/finkit/` (три класи: `LoanCalculator`, `TransferValidator`, `AccountLedger`). Тег: _[`v1-sprint4`]_. Результат `mvn test`: _[заповнити після повного прогону: N passed / M failed]_.
+- **v2 (спринт 5):** _[буде додано розробниками]_. Тег: _[`v2-sprint5`]_. Після заміни теки класів тести не змінюються; результати порівнюються для верифікації виправлень і пошуку регресії.
 
-**Кирилиця у виводі перетворилася на `????`.** У `pom.xml` уже задано `UTF-8`; для консолі
-Windows виконайте `chcp 65001` або запускайте тести з IDEA.
+---
 
-**`BigDecimal` — `expected: <120> but was: <120.00>`.** `assertEquals` порівнює `BigDecimal`
-разом зі шкалою (кількістю знаків); задайте очікуване значення з тією ж шкалою
-(`new BigDecimal("120.00")`) або порівнюйте через `compareTo`.
+## 8. Нормативи для команди з 3 осіб (спринт 4)
+
+| Показник | Норматив | Факт |
+|---|---|---|
+| Юніт-тести JUnit 5 (кожен параметризований метод = 1 тест) | ≥ 12 | _[заповнити]_ |
+| UI-сценарії WebDriver (1 сценарій = 1 тест-метод) | ≥ 6 | _[заповнити]_ |
+| Знайдені дефекти модуля (звіт + тест на кожен) | ≥ 3 | _[заповнити]_ |
+| Юніт-тести на кожного члена команди (за комітами) | ≥ 3 | _[заповнити]_ |
+| Сценарії, записані в Selenium IDE | 1–2 | _[заповнити]_ |
+
+---
+
+## 9. Корисні посилання
+
+- **Матриця покриття BL-вимог:** `docs/sprint4/coverage-matrix.md` _(буде додано)_.
+- **Протокол запуску (Surefire):** `docs/sprint4/surefire-summary.md` _(буде додано)_.
+- **Перелік UI-сценаріїв і локаторів:** `docs/sprint4/ui-scenarios.md` _(буде додано)_.
+- **Звіти про дефекти demo (спринт 3):** GitHub Issues з міткою `sprint:3`.
+- **Виправлена SRS v1.1:**` docs/sprint2/SRS-1.1.md`
+
+---
+
+## 10. Примітки
+
+1. **Дані для UI-тестів.** ParaBank не надає готових облікових записів; у тестах користувач створюється через реєстрацію (наприклад, у `@BeforeAll` або на початку кожного тесту). Використовуються лише вигадані тестові дані з префіксом команди (`BMIBM_`).
+2. **Стабільність UI-тестів.** Усі очікування — явні (`WebDriverWait` + `ExpectedConditions`); `Thread.sleep` та `implicitlyWait` не використовуються. Локатори — за `id`, `name` або `data-test` (де доступні), без абсолютних XPath.
+3. **Code review.** Кожен тест-клас пройшов рецензування за чек-листом 5.3 методички; позначки рецензента — у матриці покриття.
+4. **README оновлюється** у спринті 5 за результатами регресії на версії v2.
+
+---
+
+_Останнє оновлення: 8 листопада 2026._
