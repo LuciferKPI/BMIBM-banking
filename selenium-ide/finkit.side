@@ -1,0 +1,73 @@
+{
+  "id": "finkit-sprint4-ide",
+  "version": "2.0",
+  "name": "Finkit ParaBank Scenarios",
+  "url": "https://parabank.parasoft.com",
+  "tests": [{
+    "id": "tc-004-login",
+    "name": "TC-004 Login Test",
+    "commands": [
+      {
+        "id": "cmd-1",
+        "comment": "Відкриття сторінки ParaBank",
+        "command": "open",
+        "target": "/parabank/index.htm",
+        "targets": [],
+        "value": ""
+      },
+      {
+        "id": "cmd-wait",
+        "comment": "Очікування завантаження поля логіну в DOM",
+        "command": "waitForElementPresent",
+        "target": "name=username",
+        "targets": [],
+        "value": "5000"
+      },
+      {
+        "id": "cmd-2",
+        "comment": "Введення логіну через JS",
+        "command": "executeScript",
+        "target": "const el = document.querySelector('input[name=\"username\"]') || document.getElementsByName('username')[0]; if (el) { el.value = 'BMIBM_user1'; el.dispatchEvent(new Event('input', { bubbles: true })); }",
+        "targets": [],
+        "value": ""
+      },
+      {
+        "id": "cmd-3",
+        "comment": "Введення пароля через JS",
+        "command": "executeScript",
+        "target": "const el = document.querySelector('input[name=\"password\"]') || document.getElementsByName('password')[0]; if (el) { el.value = 'TestPass123!'; el.dispatchEvent(new Event('input', { bubbles: true })); }",
+        "targets": [],
+        "value": ""
+      },
+      {
+        "id": "cmd-4",
+        "comment": "Натискання кнопки Log In",
+        "command": "click",
+        "target": "css=input.button",
+        "targets": [
+          ["css=input.button", "css:finder"],
+          ["xpath=//input[@value='Log In']", "xpath:attributes"]
+        ],
+        "value": ""
+      },
+      {
+        "id": "cmd-5",
+        "comment": "Перевірка успішного входу за заголовком Accounts Overview",
+        "command": "assertText",
+        "target": "css=h1.title",
+        "targets": [],
+        "value": "Accounts Overview"
+      }
+    ]
+  }],
+  "suites": [{
+    "id": "suite-finkit",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["tc-004-login"]
+  }],
+  "urls": ["https://parabank.parasoft.com/"],
+  "plugins": []
+}
