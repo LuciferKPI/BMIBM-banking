@@ -14,7 +14,7 @@ import java.time.Duration;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Tag("ui")
-@DisplayName("ParaBank UI: Авторизація та аутентифікація користувача")
+@DisplayName("ParaBank UI: Авторизація та навігація (6 сценаріїв)")
 public class LoginUiTest {
 
     private WebDriver driver;
@@ -24,7 +24,7 @@ public class LoginUiTest {
     @BeforeEach
     void setUp() {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless=new"); // Безголовий режим за вимогами Спринту 4
+        options.addArguments("--headless=new");
         options.addArguments("--remote-allow-origins=*");
         options.addArguments("--window-size=1920,1080");
         options.addArguments("--disable-gpu");
@@ -35,16 +35,38 @@ public class LoginUiTest {
     }
 
     @Test
-    @DisplayName("TC-004: Перевірка наявності та відображення елементів форми авторизації")
-    void testLoginPageFormPresent() {
-        // Arrange & Act
+    @DisplayName("TC-001: Перевірка заголовку головної сторінки ParaBank")
+    void testPageTitle() {
         driver.get(baseUrl);
+        assertTrue(driver.getTitle().contains("ParaBank"), "Заголовок сторінки має містити ParaBank");
+    }
 
+    @Test
+    @DisplayName("TC-002: Перевірка видимості логотипу системи")
+    void testLogoVisible() {
+        driver.get(baseUrl);
+        WebElement logo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("img.logo")));
+        assertTrue(logo.isDisplayed(), "Логотип має бути видимим");
+    }
+
+    @Test
+    @DisplayName("TC-003: Перехід на сторінку реєстрації за посиланням Register")
+    void testNavigateToRegister() {
+        driver.get(baseUrl);
+        WebElement registerLink = wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Register")));
+        registerLink.click();
+        WebElement title = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("h1.title")));
+        assertTrue(title.getText().contains("Signing up"), "Заголовок має бути Signing up");
+    }
+
+    @Test
+    @DisplayName("TC-004: Перевірка наявності елементів форми авторизації")
+    void testLoginPageFormPresent() {
+        driver.get(baseUrl);
         WebElement usernameInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("username")));
         WebElement passwordInput = driver.findElement(By.name("password"));
         WebElement loginButton = driver.findElement(By.cssSelector("input.button"));
 
-        // Assert
         assertAll(
             () -> assertTrue(usernameInput.isDisplayed(), "Поле логіну має бути видимим"),
             () -> assertTrue(passwordInput.isDisplayed(), "Поле пароля має бути видимим"),
@@ -53,11 +75,9 @@ public class LoginUiTest {
     }
 
     @Test
-    @DisplayName("TC-005: Спроба входу з некоректними даними (обробка сторінки з помилкою)")
+    @DisplayName("TC-005: Спроба входу з некоректними даними")
     void testInvalidPasswordLoginThrowsError() {
-        // Arrange
         driver.get(baseUrl);
-
         WebElement usernameInput = wait.until(ExpectedConditions.elementToBeClickable(By.name("username")));
         usernameInput.clear();
         usernameInput.sendKeys("BMIBM_invalid_user");
@@ -65,16 +85,25 @@ public class LoginUiTest {
         WebElement passwordInput = driver.findElement(By.name("password"));
         passwordInput.clear();
         passwordInput.sendKeys("WrongPassword999!");
-
-        // Act: використовуємо submit() для гарантованої відправки форми в headless Chrome
         passwordInput.submit();
 
-        // Assert: чекаємо завантаження результату (помилки або елемента сторінки відповідей)
         WebElement resultElement = wait.until(ExpectedConditions.presenceOfElementLocated(
                 By.cssSelector(".error, h1.title, #rightPanel p")
         ));
+        assertNotNull(resultElement, "Має відобразитися сторінка відповіді/помилки");
+    }
 
-        assertNotNull(resultElement, "Після відправки невалідного логіну має відобразитися сторінка відповіді/помилки");
+    @Test
+    @DisplayName("TC-006: Відправка порожньої форми входу")
+    void testEmptyCredentialsLogin() {
+        driver.get(baseUrl);
+        WebElement passwordInput = wait.until(ExpectedConditions.elementToBeClickable(By.name("password")));
+        passwordInput.submit();
+
+        WebElement resultElement = wait.until(ExpectedConditions.presenceOfElementLocated(
+                By.cssSelector(".error, h1.title, #rightPanel p")
+        ));
+        assertNotNull(resultElement, "Має відобразитися сторінка відповіді або помилка");
     }
 
     @AfterEach
