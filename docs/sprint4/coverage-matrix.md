@@ -1,11 +1,14 @@
-# Матриця покриття бізнес-логіки (BL Coverage Matrix) — ФінКит
+# Матриця покриття бізнес-логіки (BL Coverage Matrix)
 
 | ID Вимоги | Правило BL | Клас | Тест-метод | Рецензент | Статус |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| BL-10 | Кредитний калькулятор: розрахунок ануїтетного платежу | `LoanCalculatorTest` | *TBD* | Городиська А. А. | ⏳ |
-| BL-20 | Кредитний калькулятор: мін./макс. сума кредиту | `LoanCalculatorTest` | *TBD* | Городиська А. А. | ⏳ |
-| BL-30 | Кредитний калькулятор: межі строку та відсоткової ставки | `LoanCalculatorTest` | *TBD* | Городиська А. А. | ⏳ |
-| BL-40 | Переказ коштів: денний ліміт 50 000 грн та перевірка балансу | `TransferValidatorTest` | *TBD* | Мажуга І. К. | ⏳ |
-| BL-50 | Переказ коштів: валідація формату IBAN | `TransferValidatorTest` | *TBD* | Мажуга І. К. | ⏳ |
-| BL-70 | Облік рахунку: deposit/withdraw, перевірка меж | `AccountLedgerTest` | *TBD* | Пономаренко Р. В. | ⏳ |
-| BL-80 | Облік рахунку: винятки, округлення HALF_UP | `AccountLedgerTest` | *TBD* | Пономаренко Р. В. | ⏳ |
+| BL-10 | Переказ коштів: Денний ліміт 50 000 грн (межа) | `TransferValidatorTest` | `dailyLimitBoundaryCheck` | Пономаренко Р. / Мажуга І. | Failed (Issue #11) |
+| BL-11 | Переказ коштів: Формат IBAN валідується | `TransferValidatorTest` | `validIbanFormatReturnsTrue` | Пономаренко Р. / Мажуга І. | Passed |
+| BL-12 | Переказ коштів: Від'ємні суми заборонені | `TransferValidatorTest` | `negativeTransferAmountIsInvalid` | Пономаренко Р. / Мажуга І. | Passed |
+| BL-30 | Кредитний калькулятор: Мін. строк 3 місяці (нижня межа) | `LoanCalculatorTest` | `monthlyPayment_exactlyMinMonths_noException` | Городиська А. / Мажуга І. | Failed (BUG-010 / Issue #15) |
+| BL-10 | Кредитний калькулятор: Точність проміжної ставки (округлення до 4 знаків) | `LoanCalculatorTest` | `monthlyPayment_variousParams_correctValues` | Городиська А. / Мажуга І. | Failed (BUG-011 / Issue #17) |
+| BL-70 | Рахунок: Зняття точної суми поточного балансу | `AccountLedgerTest` | `testWithdrawExactBalance` | Городиська А. / Пономаренко Р. | Failed (BUG-009 / Issue #14) |
+| BL-70 | Рахунок: Поповнення балансу (deposit) | `AccountLedgerTest` | `testDepositSuccess` | Городиська А. / Пономаренко Р. | Passed |
+| TC-001 | UI: Перевірка заголовку головної сторінки | `LoginUiTest` | `testPageTitle` | Городиська А. | Passed |
+| TC-004 | UI: Наявність елементів форми авторизації | `LoginUiTest` | `testLoginPageFormPresent` | Городиська А. | Passed |
+| TC-005 | UI: Спроба входу з некоректними даними | `LoginUiTest` | `testInvalidPasswordLoginThrowsError` | Городиська А. | Passed |
