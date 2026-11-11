@@ -42,15 +42,52 @@ class TransferValidatorTest {
 
         boolean isValid = validator.isValid(validFromIban, validToIban, amount, balance, todaySpent);
 
-        assertEquals(expected, isValid, "Перевірка ліміту 50 000 грн не пройшла");
+        assertEquals(expected, isValid, "Помилка валідації ліміту");
+    }
+
+    @Test
+    @DisplayName("BL-40: перевірка ліміту з урахуванням уже витрачених коштів")
+    void validateReturnsErrorForDailyLimitWithTodaySpent() {
+        BigDecimal amount = new BigDecimal("20000.00");
+        BigDecimal balance = new BigDecimal("100000.00");
+        BigDecimal todaySpent = new BigDecimal("35000.00"); 
+
+        List<TransferError> errors = validator.validate(validFromIban, validToIban, amount, balance, todaySpent);
+
+        assertTrue(errors.contains(TransferError.DAILY_LIMIT_EXCEEDED), "Має бути код DAILY_LIMIT_EXCEEDED");
+    }
+
+    @Test
+    @DisplayName("BL-40: помилка SAME_ACCOUNT при однакових рахунках")
+    void validateReturnsErrorForSameAccount() {
+        BigDecimal amount = new BigDecimal("1000.00");
+        BigDecimal balance = new BigDecimal("10000.00");
+        BigDecimal todaySpent = new BigDecimal("0.00");
+
+        List<TransferError> errors = validator.validate(validFromIban, validFromIban, amount, balance, todaySpent);
+
+        assertTrue(errors.contains(TransferError.SAME_ACCOUNT), "Має бути код SAME_ACCOUNT");
+    }
+
+    @Test
+    @DisplayName("BL-50: код помилки для невалідного формату IBAN")
+    void validateReturnsErrorsForInvalidIbanFormats() {
+        BigDecimal amount = new BigDecimal("1000.00");
+        BigDecimal balance = new BigDecimal("10000.00");
+        BigDecimal todaySpent = new BigDecimal("0.00");
+        String invalidFrom = "UA111"; 
+
+        List<TransferError> errors = validator.validate(invalidFrom, validToIban, amount, balance, todaySpent);
+
+        assertTrue(errors.contains(TransferError.INVALID_FROM_IBAN), "Має бути код INVALID_FROM_IBAN");
     }
 
     @ParameterizedTest(name = "BL-50: валідація IBAN формату для {0}")
     @ValueSource(strings = {"UA123456789012345678901234567", "UA000000000000000000000000000"})
-    @DisplayName("BL-50: коректний IBAN має довжину 29 символів і починається з UA")
+    @DisplayName("BL-50: коректний IBAN (29 символів)")
     void validIbanFormatReturnsTrue(String iban) {
         boolean isValid = TransferValidator.isValidIban(iban);
-        assertTrue(isValid, "IBAN має бути коректним");
+        assertTrue(isValid, "IBAN коректний");
     }
 
     @ParameterizedTest(name = "BL-50: негативна валідація IBAN формату для {0}")
@@ -58,14 +95,14 @@ class TransferValidatorTest {
     @DisplayName("BL-50: некоректний IBAN відхиляється")
     void invalidIbanFormatReturnsFalse(String iban) {
         boolean isValid = TransferValidator.isValidIban(iban);
-        assertFalse(isValid, "IBAN має бути визнаний некоректним");
+        assertFalse(isValid, "IBAN некоректний");
     }
 
     @Test
     @DisplayName("BL-50: null IBAN відхиляється")
     void nullIbanFormatReturnsFalse() {
         boolean isValid = TransferValidator.isValidIban(null);
-        assertFalse(isValid, "null IBAN має бути визнаний некоректним");
+        assertFalse(isValid, "null IBAN некоректний");
     }
 
     @Test
@@ -77,11 +114,11 @@ class TransferValidatorTest {
 
         boolean isValid = validator.isValid(validFromIban, validToIban, negativeAmount, balance, todaySpent);
 
-        assertFalse(isValid, "Від'ємна сума не повинна пропускатися системою");
+        assertFalse(isValid, "Від'ємна сума не проходить");
     }
 
     @Test
-    @DisplayName("BL-40: метод validate() повертає перелік помилок при недостатньому балансі")
+    @DisplayName("BL-40: помилка при недостатньому балансі")
     void validateReturnsErrorsForInsufficientFunds() {
         BigDecimal amount = new BigDecimal("2000.00");
         BigDecimal balance = new BigDecimal("1000.00");
@@ -89,6 +126,6 @@ class TransferValidatorTest {
 
         List<TransferError> errors = validator.validate(validFromIban, validToIban, amount, balance, todaySpent);
 
-        assertTrue(errors.contains(TransferError.INSUFFICIENT_FUNDS), "Метод validate має повернути код помилки INSUFFICIENT_FUNDS");
+        assertTrue(errors.contains(TransferError.INSUFFICIENT_FUNDS), "Має бути код INSUFFICIENT_FUNDS");
     }
 }
