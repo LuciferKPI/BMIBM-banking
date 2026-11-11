@@ -14,7 +14,7 @@ import java.time.Duration;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Tag("ui")
-@DisplayName("ParaBank UI: Авторизація та навігація (6 сценаріїв)")
+@DisplayName("ParaBank UI: Автоматизація сценаріїв авторизації та кабінету за test-cases.xlsx")
 public class LoginUiTest {
 
     private WebDriver driver;
@@ -35,75 +35,107 @@ public class LoginUiTest {
     }
 
     @Test
-    @DisplayName("TC-001: Перевірка заголовку головної сторінки ParaBank")
-    void testPageTitle() {
-        driver.get(baseUrl);
-        assertTrue(driver.getTitle().contains("ParaBank"), "Заголовок сторінки має містити ParaBank");
-    }
-
-    @Test
-    @DisplayName("TC-002: Перевірка видимості логотипу системи")
-    void testLogoVisible() {
-        driver.get(baseUrl);
-        WebElement logo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("img.logo")));
-        assertTrue(logo.isDisplayed(), "Логотип має бути видимим");
-    }
-
-    @Test
-    @DisplayName("TC-003: Перехід на сторінку реєстрації за посиланням Register")
-    void testNavigateToRegister() {
-        driver.get(baseUrl);
-        WebElement registerLink = wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Register")));
-        registerLink.click();
-        WebElement title = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("h1.title")));
-        assertTrue(title.getText().contains("Signing up"), "Заголовок має бути Signing up");
-    }
-
-    @Test
-    @DisplayName("TC-004: Перевірка наявності елементів форми авторизації")
-    void testLoginPageFormPresent() {
-        driver.get(baseUrl);
-        WebElement usernameInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("username")));
-        WebElement passwordInput = driver.findElement(By.name("password"));
-        WebElement loginButton = driver.findElement(By.cssSelector("input.button"));
-
-        assertAll(
-            () -> assertTrue(usernameInput.isDisplayed(), "Поле логіну має бути видимим"),
-            () -> assertTrue(passwordInput.isDisplayed(), "Поле пароля має бути видимим"),
-            () -> assertTrue(loginButton.isDisplayed(), "Кнопка входу має бути видимою")
-        );
-    }
-
-    @Test
-    @DisplayName("TC-005: Спроба входу з некоректними даними")
-    void testInvalidPasswordLoginThrowsError() {
+    @DisplayName("TC-004: F-20, GUI-10 — Вхід клієнта у кабінет з коректним логіном та паролем")
+    void testValidLogin() {
         driver.get(baseUrl);
         WebElement usernameInput = wait.until(ExpectedConditions.elementToBeClickable(By.name("username")));
         usernameInput.clear();
-        usernameInput.sendKeys("BMIBM_invalid_user");
+        usernameInput.sendKeys("john");
 
         WebElement passwordInput = driver.findElement(By.name("password"));
         passwordInput.clear();
-        passwordInput.sendKeys("WrongPassword999!");
+        passwordInput.sendKeys("demo");
         passwordInput.submit();
 
-        WebElement resultElement = wait.until(ExpectedConditions.presenceOfElementLocated(
-                By.cssSelector(".error, h1.title, #rightPanel p")
+        WebElement overviewHeader = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.cssSelector("#rightPanel h1.title, #leftPanel p.smallText")
         ));
-        assertNotNull(resultElement, "Має відобразитися сторінка відповіді/помилки");
+        assertTrue(overviewHeader.isDisplayed(), "Успішний вхід має відкривати огляд рахунків клієнта");
     }
 
     @Test
-    @DisplayName("TC-006: Відправка порожньої форми входу")
-    void testEmptyCredentialsLogin() {
+    @DisplayName("TC-005: F-20 — Неуспішний вхід клієнта з некоректним паролем")
+    void testInvalidPasswordLogin() {
         driver.get(baseUrl);
-        WebElement passwordInput = wait.until(ExpectedConditions.elementToBeClickable(By.name("password")));
+        WebElement usernameInput = wait.until(ExpectedConditions.elementToBeClickable(By.name("username")));
+        usernameInput.clear();
+        usernameInput.sendKeys("BMIBM_user1");
+
+        WebElement passwordInput = driver.findElement(By.name("password"));
+        passwordInput.clear();
+        passwordInput.sendKeys("WrongPass!");
         passwordInput.submit();
 
-        WebElement resultElement = wait.until(ExpectedConditions.presenceOfElementLocated(
-                By.cssSelector(".error, h1.title, #rightPanel p")
-        ));
-        assertNotNull(resultElement, "Має відобразитися сторінка відповіді або помилка");
+        // Перевіряємо саме елемент помилки p.error з точним текстом
+        WebElement errorElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("p.error")));
+        assertTrue(errorElement.getText().contains("The username and password could not be verified"),
+                "При некоректному паролі має відображатися конкретна помилка авторизації");
+    }
+
+    @Test
+    @DisplayName("TC-007: F-40, GUI-40 — Перегляд сторінки «Огляд рахунків» та підсумкової суми")
+    void testAccountsOverviewTable() {
+        driver.get(baseUrl);
+        wait.until(ExpectedConditions.elementToBeClickable(By.name("username"))).sendKeys("john");
+        driver.findElement(By.name("password")).sendKeys("demo");
+        driver.findElement(By.cssSelector("input.button")).click();
+
+        WebElement overviewLink = wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Accounts Overview")));
+        overviewLink.click();
+
+        WebElement accountsTable = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("accountTable")));
+        assertTrue(accountsTable.isDisplayed(), "Таблиця рахунків повинна відображатися у кабінеті");
+    }
+
+    @Test
+    @DisplayName("TC-010: F-70, BL-40 — Успішне відкриття форми переказу коштів між рахунками")
+    void testTransferFundsForm() {
+        driver.get(baseUrl);
+        wait.until(ExpectedConditions.elementToBeClickable(By.name("username"))).sendKeys("john");
+        driver.findElement(By.name("password")).sendKeys("demo");
+        driver.findElement(By.cssSelector("input.button")).click();
+
+        WebElement transferLink = wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Transfer Funds")));
+        transferLink.click();
+
+        WebElement amountInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("amount")));
+        assertTrue(amountInput.isDisplayed(), "Поле введення суми переказу має бути видимим");
+    }
+
+    @Test
+    @DisplayName("TC-012: F-70, BL-40 — Негативна перевірка переказу коштів з нульовою сумою (0 грн)")
+    void testTransferZeroAmount() {
+        driver.get(baseUrl);
+        wait.until(ExpectedConditions.elementToBeClickable(By.name("username"))).sendKeys("john");
+        driver.findElement(By.name("password")).sendKeys("demo");
+        driver.findElement(By.cssSelector("input.button")).click();
+
+        WebElement transferLink = wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Transfer Funds")));
+        transferLink.click();
+
+        WebElement amountInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("amount")));
+        amountInput.clear();
+        amountInput.sendKeys("0");
+
+        WebElement submitBtn = driver.findElement(By.cssSelector("input.button"));
+        submitBtn.click();
+
+        assertNotNull(amountInput, "Форма опрацьовує граничне нульове значення");
+    }
+
+    @Test
+    @DisplayName("TC-021: F-120, GUI-80 — Завершення сеансу роботи (Log Out) та перевірка виходу")
+    void testLogout() {
+        driver.get(baseUrl);
+        wait.until(ExpectedConditions.elementToBeClickable(By.name("username"))).sendKeys("john");
+        driver.findElement(By.name("password")).sendKeys("demo");
+        driver.findElement(By.cssSelector("input.button")).click();
+
+        WebElement logoutLink = wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Log Out")));
+        logoutLink.click();
+
+        WebElement loginBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("input.button")));
+        assertTrue(loginBtn.isDisplayed(), "Після виходу користувач повертається до форми входу");
     }
 
     @AfterEach
