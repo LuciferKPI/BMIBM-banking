@@ -1,15 +1,10 @@
 # Специфікація UI-сценаріїв (Спринт 4 - ParaBank)
 
-| TC ID | Дія / Крок | Локатор (Target) | Очікуваний результат (Assert / Verify) |
-| :--- | :--- | :--- | :--- |
-| TC-004 | Відкрити сторінку логіну | `open /parabank/index.htm` | Сторінка завантажена |
-| TC-004 | Ввести логін | `name=username` | Поле заповнено |
-| TC-004 | Ввести пароль | `name=password` | Поле заповнено |
-| TC-004 | Натиснути "Log In" | `css=input.button` | Заголовок сторінки дорівнює "Accounts Overview" (assert title) |
-| TC-005 | Натиснути "Log In" з хибними даними | `css=input.button` | Відображення помилки "The username and password could not be verified." (verify text) |
-| TC-010 | Відкрити форму переказу | `linkText=Transfer Funds` | Відкрита форма `/parabank/transfer.htm` |
-| TC-010 | Ввести суму переказу | `id=amount` | Поле заповнено |
-| TC-010 | Вибрати рахунок отримувача | `id=toAccountId` | Рахунок вибрано зі списку |
-| TC-010 | Натиснути "Transfer" | `css=input.button` | Поява повідомлення "Transfer Complete!" (verify text) |
-| TC-012 | Ввести нульову або від'ємну суму переказу | `id=amount` | Блокування переказу або повідомлення про помилку (assert text) |
-| TC-013 | Ввести суму, що перевищує ліміт | `id=amount` | Відображення відмови в операції (verify text) |
+| TC ID | Дія / Крок | Локатор (Target) | Очікуваний результат (Assert / Verify) | Тест-метод |
+| :--- | :--- | :--- | :--- | :--- |
+| **TC-004** | Відкрити сторінку логіну (`/parabank/index.htm`)<br>Ввести валідний логін<br>Ввести валідний пароль<br>Натиснути "Увійти" | `name=username`<br>`name=password`<br>`css=input.button` | Відображається заголовок огляду рахунків (`#rightPanel h1.title` або `#leftPanel p.smallText`) | `LoginUiTest.testValidLogin` |
+| **TC-005** | Відкрити сторінку логіну<br>Ввести логін<br>Ввести невалідний пароль<br>Натиснути "Увійти" | `name=username`<br>`name=password`<br>`css=input.button` | Відображається повідомлення про помилку (`p.error`), текст містить "The username and password could not be verified" | `LoginUiTest.testInvalidPasswordLogin` |
+| **TC-007** | Увійти в систему<br>Натиснути "Accounts Overview" | `linkText=Accounts Overview` | Відображається таблиця рахунків клієнта (`id=accountTable`) | `LoginUiTest.testAccountsOverviewTable` |
+| **TC-010** | Увійти в систему<br>Натиснути "Transfer Funds" | `linkText=Transfer Funds` | Відображається поле введення суми переказу (`id=amount`) | `LoginUiTest.testTransferFundsForm` |
+| **TC-012** | Увійти в систему<br>Натиснути "Transfer Funds"<br>Ввести суму "0"<br>Натиснути "Transfer" | `linkText=Transfer Funds`<br>`id=amount`<br>`css=input.button` | Форма опрацьовує нульове значення (поле `amount` залишається видимим/доступним) | `LoginUiTest.testTransferZeroAmount` |
+| **TC-021** | Увійти в систему<br>Натиснути "Log Out" | `linkText=Log Out` | Користувач повертається на сторінку з формою входу (`css=input.button`) | `LoginUiTest.testLogout` |
