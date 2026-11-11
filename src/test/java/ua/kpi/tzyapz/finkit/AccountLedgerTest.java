@@ -35,8 +35,9 @@ public class AccountLedgerTest {
     }
 
     @Test
-    @DisplayName("BL-70: Формування та перевірка порядку записів історії операцій у history()")
+    @DisplayName("Формування та перевірка порядку записів історії операцій у history()")
     void testHistoryOrderAndEntries() {
+        // A1 (відхилено): Прибрано мітку BL-70, оскільки history() відсутній у SRS v1.1
         ledger.deposit(new BigDecimal("200.00"));
         ledger.deposit(new BigDecimal("300.00"));
 
@@ -47,9 +48,9 @@ public class AccountLedgerTest {
     }
 
     @Test
-    @DisplayName("BL-80: Перевірка викидання IllegalArgumentException та IllegalStateException для невалідних операцій")
+    @DisplayName("BL-80: Перевірка винятків IllegalArgumentException та IllegalStateException для невалідних операцій")
     void testInvalidAmountAndOverdraftExceptions() {
-        // Перевірка невалідної суми (IllegalArgumentException)
+        // Перевірка від'ємної та нульової суми (IllegalArgumentException)
         assertThrows(IllegalArgumentException.class, () -> {
             ledger.deposit(new BigDecimal("-50.00"));
         }, "Від'ємна сума депозиту повинна викликати IllegalArgumentException");
@@ -66,10 +67,28 @@ public class AccountLedgerTest {
     }
 
     @Test
+    @DisplayName("BL-80: Висунення NullPointerException для null-аргументів (виявлення BUG-012 / Issue #18)")
+    void testNullArgumentsThrowNullPointerException() {
+        // A3: Очікуємо строго NullPointerException за вимогами SRS v1.1 BL-80.
+        // У коді v1 тест впаде з Unexpected exception type (помилка v1 кидає IAE замість NPE).
+        assertThrows(NullPointerException.class, () -> {
+            ledger.deposit(null);
+        }, "BL-80: null у deposit має кидати NullPointerException");
+
+        assertThrows(NullPointerException.class, () -> {
+            ledger.withdraw(null);
+        }, "BL-80: null у withdraw має кидати NullPointerException");
+    }
+
+    @Test
     @DisplayName("BL-80: Перевірка округлення HALF_UP та незмінності стану при зчитуванні balance() і history()")
     void testRoundingScaleAndStateImmutability() {
-        ledger.deposit(new BigDecimal("100.00"));
+        // A2: Додано перевірку округлення HALF_UP (100.005 -> 100.01)
+        AccountLedger roundingLedger = new AccountLedger();
+        roundingLedger.deposit(new BigDecimal("100.005"));
+        assertEquals(new BigDecimal("100.01"), roundingLedger.balance(), "Сума 100.005 має округлюватися HALF_UP до 100.01");
 
+        ledger.deposit(new BigDecimal("100.00"));
         BigDecimal initialBalance = ledger.balance();
         var historySnapshot1 = ledger.history();
         var historySnapshot2 = ledger.history();
