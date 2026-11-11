@@ -136,6 +136,13 @@ class LoanCalculatorTest {
             calc.monthlyPayment(new BigDecimal("1000000"), new BigDecimal("12"), 12));
     }
 
+    @Test
+    @DisplayName("BL-30: максимальна ставка 40 % — на межі, виняток не кидається")
+    void monthlyPayment_exactlyMaxRate_noException() {
+        assertDoesNotThrow(() ->
+            calc.monthlyPayment(new BigDecimal("10000"), new BigDecimal("40"), 12));
+    }
+
     @AfterEach
     void tearDown() {
         calc = null;
