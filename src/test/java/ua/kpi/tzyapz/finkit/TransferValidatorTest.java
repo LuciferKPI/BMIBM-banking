@@ -13,7 +13,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
 @Tag("unit")
 @DisplayName("Перевірка валідатора переказів (TransferValidator)")
 class TransferValidatorTest {
@@ -37,14 +36,11 @@ class TransferValidatorTest {
     })
     @DisplayName("BL-40: перевірка денного ліміту переказів на граничних значеннях")
     void dailyLimitBoundaryCheck(String amountStr, boolean expected) {
-        
         BigDecimal amount = new BigDecimal(amountStr);
         BigDecimal balance = new BigDecimal("100000.00"); 
         BigDecimal todaySpent = new BigDecimal("0.00");
 
-        
         boolean isValid = validator.isValid(validFromIban, validToIban, amount, balance, todaySpent);
-
 
         assertEquals(expected, isValid, "Перевірка ліміту 50 000 грн не пройшла");
     }
@@ -53,38 +49,46 @@ class TransferValidatorTest {
     @ValueSource(strings = {"UA123456789012345678901234567", "UA000000000000000000000000000"})
     @DisplayName("BL-50: коректний IBAN має довжину 29 символів і починається з UA")
     void validIbanFormatReturnsTrue(String iban) {
-     
         boolean isValid = TransferValidator.isValidIban(iban);
-
-       
         assertTrue(isValid, "IBAN має бути коректним");
+    }
+
+    @ParameterizedTest(name = "BL-50: негативна валідація IBAN формату для {0}")
+    @ValueSource(strings = {"", "UA123", "UK123456789012345678901234567", "UA1234567890123456789012345XX"})
+    @DisplayName("BL-50: некоректний IBAN відхиляється")
+    void invalidIbanFormatReturnsFalse(String iban) {
+        boolean isValid = TransferValidator.isValidIban(iban);
+        assertFalse(isValid, "IBAN має бути визнаний некоректним");
+    }
+
+    @Test
+    @DisplayName("BL-50: null IBAN відхиляється")
+    void nullIbanFormatReturnsFalse() {
+        boolean isValid = TransferValidator.isValidIban(null);
+        assertFalse(isValid, "null IBAN має бути визнаний некоректним");
     }
 
     @Test
     @DisplayName("BL-40: від'ємна сума переказу не дозволяється")
     void negativeTransferAmountIsInvalid() {
-       
         BigDecimal negativeAmount = new BigDecimal("-100.00");
         BigDecimal balance = new BigDecimal("1000.00");
         BigDecimal todaySpent = new BigDecimal("0.00");
 
-        
         boolean isValid = validator.isValid(validFromIban, validToIban, negativeAmount, balance, todaySpent);
 
-      
         assertFalse(isValid, "Від'ємна сума не повинна пропускатися системою");
     }
 
     @Test
     @DisplayName("BL-40: метод validate() повертає перелік помилок при недостатньому балансі")
     void validateReturnsErrorsForInsufficientFunds() {
-
         BigDecimal amount = new BigDecimal("2000.00");
         BigDecimal balance = new BigDecimal("1000.00");
         BigDecimal todaySpent = new BigDecimal("0.00");
 
         List<TransferError> errors = validator.validate(validFromIban, validToIban, amount, balance, todaySpent);
 
-        assertFalse(errors.isEmpty(), "Метод validate має повернути непорожній список помилок, якщо баланс недостатній");
+        assertTrue(errors.contains(TransferError.INSUFFICIENT_FUNDS), "Метод validate має повернути код помилки INSUFFICIENT_FUNDS");
     }
 }
