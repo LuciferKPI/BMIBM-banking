@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 @Tag("unit")
 @DisplayName("Перевірка валідатора переказів (TransferValidator)")
 class TransferValidatorTest {
