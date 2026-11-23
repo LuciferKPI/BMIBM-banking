@@ -58,9 +58,7 @@ public final class AccountLedger {
      * @return незмінюваний перелік записів у порядку виконання операцій
      */
     public List<LedgerEntry> history() {
-        List<LedgerEntry> copy = new ArrayList<>(entries);
-        Collections.reverse(copy);
-        return Collections.unmodifiableList(copy);
+        return Collections.unmodifiableList(new ArrayList<>(entries));
     }
 
     private static BigDecimal requirePositive(BigDecimal amount) {

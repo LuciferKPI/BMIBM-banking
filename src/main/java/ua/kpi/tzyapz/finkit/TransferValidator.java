@@ -32,6 +32,9 @@ public final class TransferValidator {
         if (!isValidIban(fromIban)) {
             errors.add(TransferError.INVALID_FROM_IBAN);
         }
+        if (!isValidIban(toIban)) {
+            errors.add(TransferError.INVALID_TO_IBAN);
+        }
         if (fromIban != null && fromIban.equals(toIban)) {
             errors.add(TransferError.SAME_ACCOUNT);
         }
@@ -39,7 +42,7 @@ public final class TransferValidator {
             errors.add(TransferError.AMOUNT_NOT_POSITIVE);
             return errors;
         }
-        if (amount.compareTo(balance) > 0) {
+        if (amount.compareTo(balance) >= 0) {
             errors.add(TransferError.INSUFFICIENT_FUNDS);
         }
         if (todaySpent.add(amount).compareTo(DAILY_LIMIT) >= 0) {

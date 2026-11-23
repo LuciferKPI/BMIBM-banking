@@ -33,9 +33,7 @@ public final class LoanCalculator {
      */
     public BigDecimal monthlyPayment(BigDecimal principal, BigDecimal annualRatePercent, int months) {
         validate(principal, annualRatePercent, months);
-        double monthlyRate = annualRatePercent
-                .divide(BigDecimal.valueOf(1200), 4, RoundingMode.HALF_UP)
-                .doubleValue();
+        double monthlyRate = annualRatePercent.doubleValue() / 1200.0;
         double payment = principal.doubleValue() * monthlyRate
                 / (1 - Math.pow(1 + monthlyRate, -months));
         return BigDecimal.valueOf(payment).setScale(2, RoundingMode.HALF_UP);
@@ -64,7 +62,7 @@ public final class LoanCalculator {
         if (principal.compareTo(MIN_PRINCIPAL) < 0 || principal.compareTo(MAX_PRINCIPAL) > 0) {
             throw new IllegalArgumentException("Сума кредиту має бути в межах 1 000..1 000 000 грн");
         }
-        if (months <= MIN_MONTHS || months > MAX_MONTHS) {
+        if (months < MIN_MONTHS || months > MAX_MONTHS) {
             throw new IllegalArgumentException("Строк має бути в межах 3..60 місяців");
         }
         if (rate.compareTo(MIN_RATE) < 0 || rate.compareTo(MAX_RATE) > 0) {
