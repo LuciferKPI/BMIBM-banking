@@ -1,0 +1,29 @@
+-------------------------------------------------------------------------------
+Test set: ua.kpi.tzyapz.finkit.AccountLedgerTest
+-------------------------------------------------------------------------------
+Tests run: 6, Failures: 1, Errors: 1, Skipped: 0, Time elapsed: 0.167 s <<< FAILURE! -- in ua.kpi.tzyapz.finkit.AccountLedgerTest
+ua.kpi.tzyapz.finkit.AccountLedgerTest.testNullArgumentsThrowNullPointerException -- Time elapsed: 0.023 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: BL-80: null у deposit має кидати NullPointerException ==> Unexpected exception type thrown, expected: <java.lang.NullPointerException> but was: <java.lang.IllegalArgumentException>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:67)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:39)
+	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3131)
+	at ua.kpi.tzyapz.finkit.AccountLedgerTest.testNullArgumentsThrowNullPointerException(AccountLedgerTest.java:74)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+Caused by: java.lang.IllegalArgumentException: Сума операції має бути додатною
+	at ua.kpi.tzyapz.finkit.AccountLedger.requirePositive(AccountLedger.java:68)
+	at ua.kpi.tzyapz.finkit.AccountLedger.deposit(AccountLedger.java:25)
+	at ua.kpi.tzyapz.finkit.AccountLedgerTest.lambda$testNullArgumentsThrowNullPointerException$0(AccountLedgerTest.java:75)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:53)
+	... 6 more
+
+ua.kpi.tzyapz.finkit.AccountLedgerTest.testWithdrawExactBalance -- Time elapsed: 0.003 s <<< ERROR!
+java.lang.IllegalStateException: Овердрафт заборонено: недостатньо коштів
+	at ua.kpi.tzyapz.finkit.AccountLedger.withdraw(AccountLedger.java:40)
+	at ua.kpi.tzyapz.finkit.AccountLedgerTest.testWithdrawExactBalance(AccountLedgerTest.java:33)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
