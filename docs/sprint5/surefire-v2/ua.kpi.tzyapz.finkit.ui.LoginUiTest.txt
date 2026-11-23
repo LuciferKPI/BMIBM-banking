@@ -1,0 +1,28 @@
+-------------------------------------------------------------------------------
+Test set: ua.kpi.tzyapz.finkit.ui.LoginUiTest
+-------------------------------------------------------------------------------
+Tests run: 6, Failures: 1, Errors: 1, Skipped: 0, Time elapsed: 49.06 s <<< FAILURE! -- in ua.kpi.tzyapz.finkit.ui.LoginUiTest
+ua.kpi.tzyapz.finkit.ui.LoginUiTest.testTransferZeroAmount -- Time elapsed: 12.23 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: Переказ 0 грн не повинен завершуватися успіхом: з'явився заголовок 'Transfer Complete'. Дефект demo BUG-002 (див. GitHub Issue #2) — тест лишається «червоним» до виправлення ParaBank
+	at org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:38)
+	at org.junit.jupiter.api.Assertions.fail(Assertions.java:138)
+	at ua.kpi.tzyapz.finkit.ui.LoginUiTest.testTransferZeroAmount(LoginUiTest.java:120)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
+ua.kpi.tzyapz.finkit.ui.LoginUiTest.testInvalidPasswordLogin -- Time elapsed: 19.66 s <<< ERROR!
+org.openqa.selenium.TimeoutException: 
+Expected condition failed: waiting for visibility of element located by By.cssSelector: p.error (tried for 15 second(s) with 500 milliseconds interval)
+Build info: version: '4.21.0', revision: '79ed462ef4'
+System info: os.name: 'Windows 11', os.arch: 'amd64', os.version: '10.0', java.version: '25'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 157.0.8103.79, chrome: {chromedriverVersion: 157.0.8103.78 (4b3d0dabb825..., userDataDir: C:\Users\DELL\AppData\Local...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:58815}, goog:processID: 1300, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: windows, proxy: Proxy(), se:cdp: ws://localhost:58815/devtoo..., se:cdpVersion: 157.0.8103.79, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, userAgent: Mozilla/5.0 (Windows NT 10...., webauthn:extension:cmtgKey: true, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Session ID: 3c024dafbc1485642515e9887760ee91
+	at org.openqa.selenium.support.ui.WebDriverWait.timeoutException(WebDriverWait.java:84)
+	at org.openqa.selenium.support.ui.FluentWait.until(FluentWait.java:228)
+	at ua.kpi.tzyapz.finkit.ui.LoginUiTest.testInvalidPasswordLogin(LoginUiTest.java:61)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+
