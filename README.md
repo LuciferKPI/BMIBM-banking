@@ -40,7 +40,7 @@
 
 ```bash
 # Клонувати репозиторій
-git clone https://github.com/LuciferKPI/BMIBM-banking.git
+git clone [https://github.com/LuciferKPI/BMIBM-banking.git](https://github.com/LuciferKPI/BMIBM-banking.git)
 cd BMIBM-banking
 
 # Запустити всі юніт-тести (UI-тести з тегом ui вимкнені за замовчуванням)
@@ -61,7 +61,7 @@ mvn test -DexcludedGroups=none -Dtest=*UiTest
 
 ---
 
-## 4. Структура репозиторію (спринт 4)
+## 4. Структура репозиторію (спринт 5)
 
 ```text
 .
@@ -75,17 +75,22 @@ mvn test -DexcludedGroups=none -Dtest=*UiTest
 │   ├── sprint1/ …                          # матеріали спринта 1
 │   ├── sprint2/ …                          # SRS v1.1, реєстр дефектів вимог
 │   ├── sprint3/ …                          # тест-кейси та журнал (спринт 3)
-│   └── sprint4/
-│       ├── coverage-matrix.md              # BL-вимога → тест → рецензент
-│       ├── code-review.md                  # рецензії тест-класів
-│       ├── retro.md                        # протокол ретроспективи
-│       ├── surefire-summary.md             # протокол запуску
-│       └── ui-scenarios.md                 # TC → кроки, локатори, тест-метод
+│   ├── sprint4/
+│   │   ├── coverage-matrix.md              # BL-вимога → тест → рецензент
+│   │   ├── code-review.md                  # рецензії тест-класів
+│   │   ├── retro.md                        # протокол ретроспективи
+│   │   ├── surefire-summary.md             # протокол запуску
+│   │   └── ui-scenarios.md                 # TC → кроки, локатори, тест-метод
+│   └── sprint5/
+│       ├── surefire-v1/                    # базові звіти Surefire (v1)
+│       ├── surefire-v2/                    # звіти Surefire після оновлення (v2 + UI)
+│       ├── regression-log.xlsx             # зведений журнал регресії (78 перевірок)
+│       └── defects-regression.md           # звіт про регресію та верифікацію дефектів
 ├── selenium-ide/
 │   ├── finkit.side                         # проєкт Selenium IDE
 │   └── export/                             # експортовані Java-чернетки
 └── src/
-    ├── main/java/ua/kpi/tzyapz/finkit/     # модуль бізнес-логіки v1
+    ├── main/java/ua/kpi/tzyapz/finkit/     # модуль бізнес-логіки v2
     │   ├── AccountLedger.java
     │   ├── LedgerEntry.java
     │   ├── LoanCalculator.java
@@ -154,7 +159,7 @@ mvn test -DexcludedGroups=none -Dtest=*UiTest
 | BUG-009 | `testWithdrawExactBalance` | AccountLedgerTest | BL-70 | Major | #14 |
 | BUG-010 | `monthlyPayment_exactlyMinMonths_noException` | LoanCalculatorTest | BL-30 | Major | #15 |
 | BUG-011 | `monthlyPayment_variousParams_correctValues[2]` | LoanCalculatorTest | BL-10 | Minor | #17 |
-| BUG-012 | `testNullArgumentsThrowNullPointerException` | AccountLedgerTest | BL-80 | Major | #18 |
+| BUG-012 | `testNullArgumentsThrowNullPointerException` | AccountLedgerTest | BL-80 | Major | #28 |
 
 > **Примітка.** Кожен «червоний» юніт-тест залишається в наборі до спринта 5, де перевіряється на версії v2 (closed / reopened). У коментарі до тесту — ID звіту.
 
@@ -172,7 +177,8 @@ mvn test -DexcludedGroups=none -Dtest=*UiTest
 
 - **v1 (спринт 4):** `src/main/java/ua/kpi/tzyapz/finkit/` (п'ять класів: `LoanCalculator`, `TransferValidator`, `AccountLedger`, `TransferError`, `LedgerEntry`).  
   Результат `mvn clean test`: **45 tests run, 4 Failures, 1 Error, 40 Passed** — 5 «червоних» юніт-тестів на зареєстровані дефекти (BUG-008, BUG-009, BUG-010, BUG-011, BUG-012).
-- **v2 (спринт 5):** _[буде додано розробниками]_. Після заміни теки класів тести не змінюються; результати порівнюються для верифікації виправлень і пошуку регресії.
+- **v2 (спринт 5):** `src/main/java/ua/kpi/tzyapz/finkit/` (оновлено 24.11.2026, тег `v2-sprint5`; тести у `src/test/java/` не змінювались).  
+  Результат `mvn clean test`: **45 tests run, 3 Failures, 1 Error, 41 Passed** — виправлено `BUG-010 (#15)` та `BUG-011 (#17)` (`Verified`); не виправлено `BUG-008 (#11)`, `BUG-009 (#14)`, `BUG-012 (#28)` (`Reopened`); виявлено нову регресію `BUG-014 (#34)` в `AccountLedgerTest.testHistoryOrderAndEntries`.
 
 ---
 
@@ -208,8 +214,43 @@ mvn test -DexcludedGroups=none -Dtest=*UiTest
 2. **Стабільність UI-тестів.** Усі очікування — явні (`WebDriverWait` + `ExpectedConditions`); `Thread.sleep` та `implicitlyWait` не використовуються. Локатори — за `id`, `name` або `data-test`, без абсолютних XPath.
 3. **Code review.** Кожен тест-клас пройшов рецензування за чек-листом 5.3 методички; позначки рецензента — у [`docs/sprint4/code-review.md`](docs/sprint4/code-review.md).
 4. **Дефект demo BUG-002** (переказ 0 грн) знайдено під час UI-автоматизації; через нього `testTransferZeroAmount` залишається «червоним», що є доказом дефекту, а не помилкою тесту.
-5. **README оновлюється** у спринті 5 за результатами регресії на версії v2.
+5. **README оновлено** у спринті 5 за результатами регресійного тестування на версії `v2` (тег `v2-sprint5`).
 
 ---
 
-_Останнє оновлення: 11 листопада 2026._
+## Спринт 5 — Регресійне тестування (`v1 → v2`) та верифікація дефектів
+
+У межах Спринта 5 модуль бізнес-логіки `ua.kpi.tzyapz.finkit` оновлено до версії **`v2`** (тести у `src/test/java/` залишено без змін для коректного порівняння результатів) та виконано повний регресійний прогін (78 перевірок: 45 юніт-тестів JUnit 5, 6 UI-тестів Selenium WebDriver, 27 ручних кейсів на ParaBank).
+
+### Запуск тестів
+* Тільки юніт-тести модуля (`LoanCalculatorTest`, `TransferValidatorTest`, `AccountLedgerTest`):
+  ```bash
+  mvn clean test
+  ```
+* Повний автонабір (JUnit 5 + Selenium WebDriver `LoginUiTest` на ParaBank):
+  ```bash
+  mvn clean test "-DexcludedGroups=none"
+  ```
+
+### Підсумок прогону (`v1 → v2`)
+| Набір тестів | Усього | v1 Passed / Failed (Blocked) | v2 Passed / Failed (Blocked) | v2 Pass Rate (без Blocked) |
+| :--- | :---: | :---: | :---: | :---: |
+| JUnit 5 (`finkit`) | 45 | 40 / 5 (0) | 41 / 4 (0) | **91.1%** |
+| Selenium WebDriver (`LoginUiTest`) | 6 | 5 / 1 (0) | 4 / 2 (0) | **66.7%** |
+| Ручні тести ParaBank (`TC-001`…`TC-027`) | 27 | 19 / 6 (2) | 19 / 7 (1) | **73.1%** |
+| **Разом** | **78** | **64 / 12 (2)** | **64 / 13 (1)** | **83.1%** |
+
+* **Виправлені дефекти (`Verified`):** 2 (`BUG-010 #15`, `BUG-011 #17` — `LoanCalculatorTest` 23/23 зелений).
+* **Невиправлені дефекти модуля (`Reopened`):** 3 (`BUG-008 #11`, `BUG-009 #14`, `BUG-012 #28`).
+* **Дефекти demo ParaBank:** 6 підтверджено `Open` (`#1`–`#6`), 1 закрито як `Closed (not reproducible)` (`BUG-007 #7`).
+* **Нові регресії, виявлені у Спринті 5:** `BUG-014 (#34)` — регресія порядку історії в `AccountLedger v2` (`Passed → Failed`); `BUG-013 (#33)` — критична регресія авторизації ParaBank по `TC-005` (`Passed → Failed`).
+
+### Артефакти Спринта 5
+* `docs/sprint5/surefire-v1/` — базові звіти Surefire (XML + TXT) для `finkit v1`
+* `docs/sprint5/surefire-v2/` — звіти Surefire (XML + TXT) для `finkit v2` та `LoginUiTest`
+* `docs/sprint5/regression-log.xlsx` — зведений журнал регресії (78 перевірок, матриця переходів, верифікація дефектів)
+* `docs/sprint5/defects-regression.md` — звіт про регресію, верифікацію `#1–#7`, `#11`, `#14`, `#15`, `#17`, `#28` та опис нових дефектів `#33` і `#34`
+
+---
+
+_Останнє оновлення: 24 листопада 2026._
